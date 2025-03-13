@@ -669,7 +669,12 @@ void wavemakerMovement::write(Ostream& os) const
         << token::END_STATEMENT << nl;
     os.writeKeyword("meanAngle") << meanAngle_ << token::END_STATEMENT << nl;
 
-    timeSeries_.writeEntry("timeSeries", os);
+	#if OFVERSION >= 1712
+		timeSeries_.writeEntry("timeSeries", os);
+	#else
+		writeEntry(os, "timeSeries", timeSeries_);
+	#endif
+
 
     if ( tSmooth_ != -1.0 )
     {
@@ -691,7 +696,11 @@ void wavemakerMovement::write(Ostream& os) const
         if ( genAbs_ )
         {
             os.writeKeyword("genAbs") << genAbs_ << token::END_STATEMENT << nl;
-            cumAbsCorrection_.writeEntry("cumAbsCorrection", os);
+			#if OFVERSION >= 1712
+				cumAbsCorrection_.writeEntry("cumAbsCorrection", os);
+			#else
+				writeEntry(os, "cumAbsCorrection", cumAbsCorrection_);
+			#endif
             // paddleEta_.writeEntry("paddleEta", os);
             os.writeKeyword("paddleEta") << paddleEta_
                 << token::END_STATEMENT << nl; // May not work for binary encoding
@@ -706,7 +715,11 @@ void wavemakerMovement::write(Ostream& os) const
         os.writeKeyword("hingeLocation") << hingeLocation_
             << token::END_STATEMENT << nl;
 
-        tiltOld_.writeEntry("tiltOld", os);
+		#if OFVERSION >= 1712
+			tiltOld_.writeEntry("tiltOld", os);
+		#else
+			writeEntry(os, "tiltOld", tiltOld_);
+		#endif
     }
     else if ( wavemakerType_ == "Mixed" )
     {
@@ -717,21 +730,37 @@ void wavemakerMovement::write(Ostream& os) const
 
         os.writeKeyword("hingeHeight") << hingeHeight_
             << token::END_STATEMENT << nl;
-        tiltOld_.writeEntry("tiltOld", os);
+		#if OFVERSION >= 1712
+			tiltOld_.writeEntry("tiltOld", os);
+		#else
+			writeEntry(os, "tiltOld", tiltOld_);
+		#endif
     }
 
     if ( wavemakerType_ == "Piston" || wavemakerType_ == "Mixed" )
     {
         if ( maxStroke_ != 999.0 ) // DPS active
         {
-            DPS_.writeEntry("DPS", os);
-            os.writeKeyword("maxStroke") << maxStroke_
-                << token::END_STATEMENT << nl;
-            os.writeKeyword("DPST") << DPST_ << token::END_STATEMENT << nl;
-            cumDPSCorrection_.writeEntry("cumDPSCorrection", os);
-            DPSsign_.writeEntry("DPSsign", os);
-            DPStIni_.writeEntry("DPStIni", os);
-            instDPSCorrection_.writeEntry("instDPSCorrection", os);
+			#if OFVERSION >= 1712
+				DPS_.writeEntry("DPS", os);
+				os.writeKeyword("maxStroke") << maxStroke_
+					<< token::END_STATEMENT << nl;
+				os.writeKeyword("DPST") << DPST_ << token::END_STATEMENT << nl;
+				cumDPSCorrection_.writeEntry("cumDPSCorrection", os);
+				DPSsign_.writeEntry("DPSsign", os);
+				DPStIni_.writeEntry("DPStIni", os);
+				instDPSCorrection_.writeEntry("instDPSCorrection", os);
+			#else
+				writeEntry(os, "DPS", DPS_);
+				os.writeKeyword("maxStroke") << maxStroke_
+					<< token::END_STATEMENT << nl;
+				os.writeKeyword("DPST") << DPST_ << token::END_STATEMENT << nl;
+				writeEntry(os, "cumDPSCorrection", cumDPSCorrection_);
+				writeEntry(os, "DPSsign", DPSsign_);
+				writeEntry(os, "DPStIni", DPStIni_);
+				writeEntry(os, "instDPSCorrection", instDPSCorrection_);
+			#endif
+
         }
     }
 

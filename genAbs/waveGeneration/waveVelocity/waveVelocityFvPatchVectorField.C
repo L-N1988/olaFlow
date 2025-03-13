@@ -508,7 +508,10 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
     // Setting the rest of the wave variables
     if ( tSmooth_ > 0.0 && currTime < tSmooth_ )
     {
-        timeMult = timeMult*currTime/tSmooth_;
+		// Liear time relax
+        // timeMult = timeMult*currTime/tSmooth_;
+		// Cos time relax
+		timeMult = timeMult*(1/2)*(1-cos(PI()*currTime/tSmooth_));
     }
 
     if ( waveType_ == "regular" )
@@ -797,18 +800,27 @@ void Foam::waveVelocityFvPatchVectorField::write(Ostream& os) const
 
     if ( waveType_ == "irregular" )
     {
-        waveHeights_.writeEntry("waveHeights", os);
-        wavePeriods_.writeEntry("wavePeriods", os);
-        waveLengths_.writeEntry("waveLengths", os);
-        wavePhases_.writeEntry("wavePhases", os);
-        waveDirs_.writeEntry("waveDirs", os);
-        timeLags_.writeEntry("timeLags", os);
-
-        os.writeKeyword("nComp") << nComp_ << token::END_STATEMENT << nl;
-
         #if OFVERSION >= 1712
+			waveHeights_.writeEntry("waveHeights", os);
+			wavePeriods_.writeEntry("wavePeriods", os);
+			waveLengths_.writeEntry("waveLengths", os);
+			wavePhases_.writeEntry("wavePhases", os);
+			waveDirs_.writeEntry("waveDirs", os);
+			timeLags_.writeEntry("timeLags", os);
+
+			os.writeKeyword("nComp") << nComp_ << token::END_STATEMENT << nl; 
+
             os.writeEntryIfDifferent<bool>("secondOrder", false, secondOrder_);
         #else
+			writeEntry(os, "waveHeights", waveHeights_);
+			writeEntry(os, "wavePeriods", wavePeriods_);
+			writeEntry(os, "waveLengths", waveLengths_);
+			writeEntry(os, "wavePhases", wavePhases_);
+			writeEntry(os, "waveDirs", waveDirs_);
+			writeEntry(os, "timeLags", timeLags_);
+
+			os.writeKeyword("nComp") << nComp_ << token::END_STATEMENT << nl; 
+
             writeEntryIfDifferent<bool>(os, "secondOrder", false, secondOrder_);
         #endif
     }
@@ -824,8 +836,13 @@ void Foam::waveVelocityFvPatchVectorField::write(Ostream& os) const
         if ( waveTheory_ == "streamFunction" )
         {
             os.writeKeyword("uMean") << uMean_ << token::END_STATEMENT << nl;
-            Bjs_.writeEntry("Bjs", os);
-            Ejs_.writeEntry("Ejs", os);
+			#if OFVERSION >= 1712
+				Bjs_.writeEntry("Bjs", os);
+				Ejs_.writeEntry("Ejs", os);
+			#else
+				writeEntry(os, "Bjs", Bjs_);
+				writeEntry(os, "Ejs", Ejs_);
+			#endif
         }
         else
         {
@@ -862,14 +879,18 @@ void Foam::waveVelocityFvPatchVectorField::write(Ostream& os) const
     {
         os.writeKeyword("waveTheory") << 
             waveTheory_ << token::END_STATEMENT << nl;
-        timeSeries_.writeEntry("timeSeries", os);
-        paddleVelocityU_.writeEntry("paddleVelocity", os);
-        paddleVelocityW_.writeEntry("paddleVelocityW", os);
-        paddleEta_.writeEntry("paddleEta", os);
 
         #if OFVERSION >= 1712
+			timeSeries_.writeEntry("timeSeries", os);
+			paddleVelocityU_.writeEntry("paddleVelocity", os);
+			paddleVelocityW_.writeEntry("paddleVelocityW", os);
+			paddleEta_.writeEntry("paddleEta", os);
             os.writeEntryIfDifferent<word>("waveTheoryOrig", "aaa", waveTheoryOrig_);
         #else
+			writeEntry(os, "timeSeries", timeSeries_);
+			writeEntry(os, "paddleVelocity", paddleVelocityU_);
+			writeEntry(os, "paddleVelocityW", paddleVelocityW_);
+			writeEntry(os, "paddleEta", paddleEta_);
             writeEntryIfDifferent<word>(os, "waveTheoryOrig", "aaa", waveTheoryOrig_);
         #endif
     }
@@ -892,7 +913,11 @@ void Foam::waveVelocityFvPatchVectorField::write(Ostream& os) const
         #endif 
     }
 
-    writeEntry("value", os);
+	#if OFVERSION >= 1712
+		writeEntry("value", os);
+	#else
+		writeEntry(os, "value", *this);
+	#endif
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

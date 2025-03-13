@@ -186,7 +186,11 @@ write(Ostream& os) const
     os.writeKeyword("AWADict") << AWADict_ << token::END_STATEMENT << nl;
     os.writeKeyword("allCheck") << allCheck_ << token::END_STATEMENT << nl;
 
+#if OFVERSION >= 1712
     writeEntry("value", os);
+#else
+    writeEntry(os, "value", *this);
+#endif
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
