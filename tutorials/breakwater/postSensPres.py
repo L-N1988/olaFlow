@@ -3,13 +3,19 @@
 import os 
 
 pathname = os.path.abspath('.')
-savePath = os.path.join(pathname,'gaugesP')
+savePath = os.path.join(pathname,'sensorsPres')
 if not os.path.isdir(savePath):
     os.makedirs(savePath)
 
-postPath = os.path.join(pathname,'postProcessing/sets')
-if not os.path.isdir(postPath):
-    postPath = 'postProcessing/gaugesP'
+postPath = os.path.join(pathname,'sets')
+if os.path.isdir(postPath):
+    postPath = 'sets'
+else:
+    postPath = os.path.join(pathname,'postProcessing/sets')
+    if os.path.isdir(postPath):
+        postPath = 'postProcessing/sets'
+    else:
+        postPath = 'postProcessing/sampleDictPres'
 
 # List of time dirs in order
 a = os.listdir('./'+postPath)

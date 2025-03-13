@@ -4,7 +4,6 @@ shopt -s extglob
 directory=`pwd`
 
 read -p "Clearing case. Are you sure? (y/N) " -n 1 -r
-echo ' '
 if ! [[ $REPLY =~ ^[Yy]$ ]]
 then
     exit
@@ -16,6 +15,6 @@ if [ -d "./constant/polyMesh" ]; then
   cd $directory
 fi
 
-rm -fr *[0-9].[0-9]* [0-9] [1-3]* gaugesVOF gaugesP postProcessing
+rm -fr *[0-9].[0-9]* [0-9] [1-3]* gaugesVOF sensorsPres postProcessing
 rm *.log
-rm constant/turbulenceProperties system/controlDict
+rm system/sampleDict constant/turbulenceProperties

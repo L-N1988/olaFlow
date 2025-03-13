@@ -118,8 +118,6 @@ waveAbsorptionVelocity3DFvPatchVectorField
 }
 
 
-#if OFFLAVOUR == 3 && OFVERSION >= 900
-#else
 Foam::
 waveAbsorptionVelocity3DFvPatchVectorField::
 waveAbsorptionVelocity3DFvPatchVectorField
@@ -155,7 +153,6 @@ waveAbsorptionVelocity3DFvPatchVectorField
     nEdgeMax_(ptf.nEdgeMax_),
     allCheck_(ptf.allCheck_)
 {}
-#endif
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -363,11 +360,24 @@ void Foam::waveAbsorptionVelocity3DFvPatchVectorField::
 write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    #if OFFLAVOUR == 3 && OFVERSION >= 700
-        #include "newWriting.H"
+
+    os.writeKeyword("nPaddles") << nPaddles_ << token::END_STATEMENT << nl;
+
+    initialWaterDepths_.writeEntry("initialWaterDepths", os);
+    meanAngles_.writeEntry("meanAngles", os);
+    zSpanL_.writeEntry("zSpanL", os);
+
+    #if OFVERSION >= 1712
+        os.writeEntryIfDifferent<label>("nEdgeMin", 0, nEdgeMin_);
+        os.writeEntryIfDifferent<label>("nEdgeMax", 0, nEdgeMax_);
     #else
-        #include "classicWriting.H"
+        writeEntryIfDifferent<label>(os, "nEdgeMin", 0, nEdgeMin_);
+        writeEntryIfDifferent<label>(os, "nEdgeMax", 0, nEdgeMax_);
     #endif
+    
+    os.writeKeyword("allCheck") << allCheck_ << token::END_STATEMENT << nl;
+
+    writeEntry("value", os);
 }
 
 

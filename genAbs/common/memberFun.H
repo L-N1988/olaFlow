@@ -303,7 +303,7 @@
             scalarList zMaxL (nPaddles_, -9999.0);
             scalarList zMinL (nPaddles_,  9999.0);
 
-            forAll(patch().faceCells(), patchCells) 
+            forAll(cellGroup, patchCells) 
             {
                 zMaxL[cellGroup[patchCells]-1] = 
                     max(zMaxL[cellGroup[patchCells]-1], zSup[patchCells] );

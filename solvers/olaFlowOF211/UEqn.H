@@ -12,12 +12,12 @@
         - fvm::laplacian(muEff/porosityF , U)
         - 1.0/porosity * ( fvc::grad(U) & fvc::grad(muEff) )
         // Closure Terms
-        + fvm::Sp(aPorField * pow(1.0 - porosity, 3) / pow(porosity,3)
-            * twoPhaseProperties.mu() / pow(D50Field,2), U)
-        + fvm::Sp(bPorField * rho * (1.0 - porosity) / pow(porosity,3) / D50Field
-            * mag(U) *
+        + aPorField * pow(1.0 - porosity, 3) / pow(porosity,3)
+            * twoPhaseProperties.mu() / pow(D50Field,2) * U
+        + bPorField * rho * (1.0 - porosity) / pow(porosity,3) / D50Field
+            * mag(U) * U * 
         // Transient formulation
-        (1.0 + useTransMask * 7.5 / KCPorField), U)
+        (1.0 + useTransMask * 7.5 / KCPorField)
     );
 
     UEqn.relax();

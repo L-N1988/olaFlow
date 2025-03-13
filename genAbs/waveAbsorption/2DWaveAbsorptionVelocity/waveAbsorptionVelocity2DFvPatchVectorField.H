@@ -156,8 +156,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        #if OFFLAVOUR == 3 && OFVERSION >= 900
-        #else
         //- Construct as copy
         waveAbsorptionVelocity2DFvPatchVectorField
         (
@@ -192,7 +190,6 @@ public:
                     (*this, iF)
             );
         }
-        #endif
 
 
     // Member functions

@@ -249,8 +249,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        #if OFFLAVOUR == 3 && OFVERSION >= 900
-        #else
         //- Construct as copy
         waveVelocityFvPatchVectorField
         (
@@ -284,7 +282,6 @@ public:
                 new waveVelocityFvPatchVectorField(*this, iF)
             );
         }
-        #endif
 
 
     // Member functions
