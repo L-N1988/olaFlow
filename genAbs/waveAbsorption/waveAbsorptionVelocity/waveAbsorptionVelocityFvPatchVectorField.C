@@ -177,11 +177,11 @@ write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
 
-    #if OFVERSION >= 1712
-        os.writeEntryIfDifferent<word>("AWADictName", "", AWADictName_);
-    #else
-        writeEntryIfDifferent<word>(os, "AWADictName", "", AWADictName_);
-    #endif
+#if OFVERSION >= 1712
+    os.writeEntryIfDifferent<word>("AWADictName", "", AWADictName_);
+#else
+    writeEntryIfDifferent<word>(os, "AWADictName", "", AWADictName_);
+#endif
 
     os.writeKeyword("AWADict") << AWADict_ << token::END_STATEMENT << nl;
     os.writeKeyword("allCheck") << allCheck_ << token::END_STATEMENT << nl;

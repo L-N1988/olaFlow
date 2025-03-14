@@ -363,21 +363,21 @@ write(Ostream& os) const
 
     os.writeKeyword("nPaddles") << nPaddles_ << token::END_STATEMENT << nl;
 
-    #if OFVERSION >= 1712
-		initialWaterDepths_.writeEntry("initialWaterDepths", os);
-		meanAngles_.writeEntry("meanAngles", os);
-		zSpanL_.writeEntry("zSpanL", os);
-        os.writeEntryIfDifferent<label>("nEdgeMin", 0, nEdgeMin_);
-        os.writeEntryIfDifferent<label>("nEdgeMax", 0, nEdgeMax_);
-    #else
-		writeEntry(os, "initialWaterDepths", initialWaterDepths_);
-		writeEntry(os, "meanAngles", meanAngles_);
-		writeEntry(os, "zSpanL", zSpanL_);
-        writeEntryIfDifferent<label>(os, "nEdgeMin", 0, nEdgeMin_);
-        writeEntryIfDifferent<label>(os, "nEdgeMax", 0, nEdgeMax_);
-    #endif
+#if OFVERSION >= 1712
+    initialWaterDepths_.writeEntry("initialWaterDepths", os);
+    meanAngles_.writeEntry("meanAngles", os);
+    zSpanL_.writeEntry("zSpanL", os);
+    os.writeEntryIfDifferent<label>("nEdgeMin", 0, nEdgeMin_);
+    os.writeEntryIfDifferent<label>("nEdgeMax", 0, nEdgeMax_);
+#else
+    writeEntry(os, "initialWaterDepths", initialWaterDepths_);
+    writeEntry(os, "meanAngles", meanAngles_);
+    writeEntry(os, "zSpanL", zSpanL_);
+    writeEntryIfDifferent<label>(os, "nEdgeMin", 0, nEdgeMin_);
+    writeEntryIfDifferent<label>(os, "nEdgeMax", 0, nEdgeMax_);
+#endif
 
-    
+
     os.writeKeyword("allCheck") << allCheck_ << token::END_STATEMENT << nl;
 
 #if OFVERSION >= 1712
