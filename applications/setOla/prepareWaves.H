@@ -151,7 +151,10 @@ scalar timeMult = tuningFactor_;
 // Setting the rest of the wave variables
 if ( tSmooth_ > 0.0 && currTime < tSmooth_ )
 {
-    timeMult = timeMult*currTime/tSmooth_;
+    // Liear time relax
+    // timeMult = timeMult*currTime/tSmooth_;
+    // Cos time relax
+    timeMult = timeMult*(1/2)*(1-Foam::cos(PI()*currTime/tSmooth_));
 }
 
 if ( waveType_ == "regular" )
